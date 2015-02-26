@@ -16,5 +16,16 @@ class MenuCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        
+        let panGesture = UISwipeGestureRecognizer(target: self, action:Selector("handlePan"))
+        panGesture.direction = UISwipeGestureRecognizerDirection.Left
+        self.addGestureRecognizer(panGesture)
     }
+    
+    func handlePan () {
+        
+        nome.text = ""
+        prezzo.text = ""
+    }
+    
 }

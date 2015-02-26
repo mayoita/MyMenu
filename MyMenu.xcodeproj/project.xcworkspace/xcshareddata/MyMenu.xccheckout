@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>20B8AF40-2785-4842-80A1-0DAA2ED6BFF7</string>
+	<key>IDESourceControlProjectName</key>
+	<string>MyMenu</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>7130187004F2D75305A5EA7D89B87CB7E5A208D1</key>
+		<string>https://github.com/mayoita/MyMenu.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>MyMenu.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>7130187004F2D75305A5EA7D89B87CB7E5A208D1</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/mayoita/MyMenu.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>7130187004F2D75305A5EA7D89B87CB7E5A208D1</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>7130187004F2D75305A5EA7D89B87CB7E5A208D1</string>
+			<key>IDESourceControlWCCName</key>
+			<string>MyMenu</string>
+		</dict>
+	</array>
+</dict>
+</plist>
