@@ -21,6 +21,9 @@ class CreaMenu: UIViewController, UITableViewDataSource, UITableViewDelegate, UI
     let parseReachable = ReachParse()
     let tapGestureForView : UIGestureRecognizer?
     let idCaNogheraInParseMenuTable = "k5xjqXyLe7"
+    var saved:Bool = false
+    var loaded:Bool = false
+    
     
     @IBOutlet weak var pickerTesto: UIPickerView!
     @IBOutlet weak var antipastiTableView: UITableView!
@@ -51,12 +54,12 @@ class CreaMenu: UIViewController, UITableViewDataSource, UITableViewDelegate, UI
 
             
             self.fetchAllObjectsFromLocalDatastore()
-            self.fetchAllObjects()
+            //self.fetchAllObjects()
   
     }
     
     func fetchAllObjects() {
-        println(self.self.noteObjects.count)
+    
        // if (parseReachable.isParseReachable() && (self.noteObjects.count == 0)) {
           //  PFObject.unpinAllObjectsInBackgroundWithBlock(nil)
             
@@ -86,14 +89,14 @@ class CreaMenu: UIViewController, UITableViewDataSource, UITableViewDelegate, UI
     func fetchAllObjectsFromLocalDatastore() {
         
         var query: PFQuery = PFQuery(className: "ListMenu")
-        
-        query.fromLocalDatastore()
+         query.orderByAscending("Nome")
+       // query.fromLocalDatastore()
         
         
         query.findObjectsInBackgroundWithBlock { (objects, error) -> Void in
             
             if (error == nil) {
-                
+                self.loaded = true
                 var temp: NSArray = objects as NSArray
                 
                 self.noteObjects = temp.mutableCopy() as NSMutableArray
@@ -122,7 +125,26 @@ class CreaMenu: UIViewController, UITableViewDataSource, UITableViewDelegate, UI
 
     
     @IBAction func closeView(sender: AnyObject) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+        if !saved {
+            let alertController = UIAlertController(title: "ATTENZIONE", message: "IL LAVORO NON È STATO SALVATO E INVIATO. SALVARLO E INVIARLO ORA?", preferredStyle: .Alert)
+            
+            let cancelAction = UIAlertAction(title: "NO", style: .Cancel) { (action) in
+                self.dismissViewControllerAnimated(true, completion: nil)
+            }
+            alertController.addAction(cancelAction)
+            
+            let OKAction = UIAlertAction(title: "SI", style: .Default) { (action) in
+                self.uploadData(self)
+               // self.dismissViewControllerAnimated(true, completion: nil)
+            }
+            alertController.addAction(OKAction)
+            
+            self.presentViewController(alertController, animated: true) {
+                // ...
+            }
+        } else {
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }
     }
     
     //tableView delegate
@@ -156,27 +178,36 @@ class CreaMenu: UIViewController, UITableViewDataSource, UITableViewDelegate, UI
     
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let tapGestureForView2 = UITapGestureRecognizer(target: self, action: Selector("hidePicker:"))
-      
-        self.view.addGestureRecognizer(tapGestureForView2)
-        pickerTesto.selectRow(0, inComponent: 0, animated: false)
-        rowInPicker = 0
-        pickerTesto.hidden = false
-        currentCell = tableView.cellForRowAtIndexPath(indexPath)
-        var cell = self.antipastiTableView.cellForRowAtIndexPath(indexPath)!
+        if loaded {
+            let tapGestureForView2 = UITapGestureRecognizer(target: self, action: Selector("hidePicker:"))
+            
+            self.view.addGestureRecognizer(tapGestureForView2)
+            pickerTesto.selectRow(0, inComponent: 0, animated: false)
+            rowInPicker = 0
+            pickerTesto.hidden = false
+            currentCell = tableView.cellForRowAtIndexPath(indexPath)
+            var cell = self.antipastiTableView.cellForRowAtIndexPath(indexPath)!
+            
+            var helper : CGPoint = cell.convertPoint(view.frame.origin, toView: nil)
+            var convertedTextFieldLowerPoint: CGPoint = view.convertPoint(cell.center, toView: nil)
+            currentIndexPath = indexPath
+            
+            var categoryPredicate = NSPredicate(format: "Categoria = %d", indexPath.section)
+            pickerDataSource = self.noteObjects.filteredArrayUsingPredicate(categoryPredicate!) as NSArray
+            pickerTesto.reloadAllComponents()
+            
+            UIView.animateWithDuration(0.2, animations:  {
+                self.pickerTesto.center = CGPointMake(convertedTextFieldLowerPoint.x, helper.y + cell.frame.size.height/2)
+                println(self.pickerTesto.frame)
+            })
+            } else {
+            let alertController = UIAlertController(title: "ATTENDI", message:
+                "Attendi.I dati non sono ancora stati scaricati...", preferredStyle: UIAlertControllerStyle.Alert)
+            alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default,handler: nil))
+            self.presentViewController(alertController, animated: true, completion: nil)
+            }
         
-        var helper : CGPoint = cell.convertPoint(view.frame.origin, toView: nil)
-        var convertedTextFieldLowerPoint: CGPoint = view.convertPoint(cell.center, toView: nil)
-        currentIndexPath = indexPath
         
-        var categoryPredicate = NSPredicate(format: "Categoria = %d", indexPath.section)
-        pickerDataSource = self.noteObjects.filteredArrayUsingPredicate(categoryPredicate!) as NSArray
-        pickerTesto.reloadAllComponents()
-   
-        UIView.animateWithDuration(0.2, animations:  {
-            self.pickerTesto.center = CGPointMake(convertedTextFieldLowerPoint.x, helper.y + cell.frame.size.height/2)
-            println(self.pickerTesto.frame)
-        })
        
     }
     
@@ -242,25 +273,26 @@ class CreaMenu: UIViewController, UITableViewDataSource, UITableViewDelegate, UI
         self.view.removeGestureRecognizer(tap)
     }
     @IBAction func uploadData(sender: AnyObject) {
+        saved = true
        
-//        var query = PFQuery(className:"Menu")
-//        query.getObjectInBackgroundWithId("25WSnGlEDW") {
-//            (menu: PFObject!, error: NSError!) -> Void in
-//            if error != nil {
-//                NSLog("%@", error)
-//                
-//            } else {
-//                
-//                menu["StartDate"] = self.dataInizio.date
-//                menu["EndDate"] = self.dataFine.date
-//                menu["Starters"] = self.menuData[0]
-//                menu["FirstCourse"] = self.menuData[1]
-//                menu["SecondCourse"] = self.menuData[2]
-//                menu["Dessert"] = self.menuData[3]
-//               
-//                menu.saveInBackgroundWithBlock(nil)
-//            }
-//        }
+        var query = PFQuery(className:"Menu")
+        query.getObjectInBackgroundWithId(idCaNogheraInParseMenuTable) {
+            (menu: PFObject!, error: NSError!) -> Void in
+            if error != nil {
+                NSLog("%@", error)
+                
+            } else {
+                
+                menu["StartDate"] = self.dataInizio.date
+                menu["EndDate"] = self.dataFine.date
+                menu["Starters"] = self.menuData[0]
+                menu["FirstCourse"] = self.menuData[1]
+                menu["SecondCourse"] = self.menuData[2]
+                menu["Dessert"] = self.menuData[3]
+               
+                menu.saveInBackgroundWithBlock(nil)
+            }
+        }
         sendMail()
        
     }
@@ -275,7 +307,7 @@ class CreaMenu: UIViewController, UITableViewDataSource, UITableViewDelegate, UI
             
             var emailTitle = "Menu dal " + dateFormatter.stringFromDate(dataInizio.date) + " al " + dateFormatter.stringFromDate(dataFine.date)
             var messageBody = writeMenu()
-            var toRecipents = ["mmoro@casinovenezia.it"]
+            var toRecipents = ["emenadeo@casinovenezia.it"]
             
             var mc:MFMailComposeViewController = MFMailComposeViewController()
             
