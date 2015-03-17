@@ -7,11 +7,16 @@
 //
 
 import UIKit
+protocol EraseCell {
+    func eraseAtIndex(indice : NSIndexPath)
+}
 
 class MenuCell: UITableViewCell {
 
     @IBOutlet weak var prezzo: UILabel!
     @IBOutlet weak var nome: UILabel!
+    var indice:NSIndexPath!
+    var delegateForErase:EraseCell?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -26,6 +31,7 @@ class MenuCell: UITableViewCell {
         
         nome.text = ""
         prezzo.text = ""
+        delegateForErase?.eraseAtIndex(indice)
     }
     
 }

@@ -9,7 +9,7 @@
 import UIKit
 import MessageUI
 
-class CreaMenu: UIViewController, UITableViewDataSource, UITableViewDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UIGestureRecognizerDelegate, MFMailComposeViewControllerDelegate {
+class CreaMenu: UIViewController, UITableViewDataSource, UITableViewDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UIGestureRecognizerDelegate, MFMailComposeViewControllerDelegate, EraseCell {
 
     let sectionMenu = ["ANTIPASTI", "PRIMI PIATTI", "SECONDI PIATTI", "DESSERT"]
     var currentCell : UITableViewCell?
@@ -56,6 +56,12 @@ class CreaMenu: UIViewController, UITableViewDataSource, UITableViewDelegate, UI
             self.fetchAllObjectsFromLocalDatastore()
             //self.fetchAllObjects()
   
+    }
+    
+    func eraseAtIndex(indice : NSIndexPath) {
+        println(indice)
+        menuData[indice.section ][indice.row*2] = ""
+        menuData[indice.section ][indice.row*2 + 1] = ""
     }
     
     func fetchAllObjects() {
@@ -160,7 +166,8 @@ class CreaMenu: UIViewController, UITableViewDataSource, UITableViewDelegate, UI
        
         cell.nome?.text = menuData[indexPath.section][indexPath.row * 2]
         cell.prezzo?.text = menuData[indexPath.section][indexPath.row * 2 + 1]
-        
+        cell.delegateForErase = self
+        cell.indice = indexPath
         return cell
       
     }
