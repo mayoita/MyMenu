@@ -121,7 +121,7 @@ class CreaMenu: UIViewController, UITableViewDataSource, UITableViewDelegate, UI
     
     func datePickerChanged(datePicker:UIDatePicker) {
         var myData = dataInizio.date
-        myData = myData.dateByAddingTimeInterval(7*24*60*60)
+        myData = myData.dateByAddingTimeInterval(6*24*60*60)
         dataFine.date = myData
     }
     
@@ -314,7 +314,7 @@ class CreaMenu: UIViewController, UITableViewDataSource, UITableViewDelegate, UI
             
             var emailTitle = "Menu dal " + dateFormatter.stringFromDate(dataInizio.date) + " al " + dateFormatter.stringFromDate(dataFine.date)
             var messageBody = writeMenu()
-            var toRecipents = ["emenadeo@casinovenezia.it"]
+            var toRecipents = ["emenadeo@casinovenezia.it","loliveto@casinovenezia.it"]
             
             var mc:MFMailComposeViewController = MFMailComposeViewController()
             
